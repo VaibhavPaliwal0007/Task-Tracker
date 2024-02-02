@@ -15,7 +15,7 @@ This is a Task Management Application built using Spring Boot for the backend an
 - **Authentication**: User authentication is implemented using Spring Security and JWT (JSON Web Tokens) for secure access to the application.
 - **Global Exception Handling**: Comprehensive global exception handling is implemented to provide consistent error responses across the application.
 - **Tailwind CSS Styling**: The frontend is styled using Tailwind CSS responsive user interface.
-- - **React Hooks**: React Hooks are utilized to handle state and lifecycle management in the frontend for cleaner and more concise code.
+- **React Hooks**: React Hooks are utilized to handle state and lifecycle management in the frontend for cleaner and more concise code.
 
 ## Routes
 
