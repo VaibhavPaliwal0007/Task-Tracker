@@ -43,8 +43,9 @@ public class Task {
 
     @ManyToOne
     @JoinTable(
-        name = "user",
-        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
+            name = "user_tasks",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     User user;
 

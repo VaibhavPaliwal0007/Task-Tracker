@@ -3,6 +3,7 @@ package org.example.tasktrackerbackend.controller;
 import javax.validation.Valid;
 import org.example.tasktrackerbackend.dto.UserDto;
 import org.example.tasktrackerbackend.service.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,11 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    private final AuthService authService;
+    private final AuthService authService = new AuthService();
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
+
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserDto signUpRequest) {
