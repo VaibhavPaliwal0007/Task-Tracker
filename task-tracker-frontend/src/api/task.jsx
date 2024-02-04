@@ -1,5 +1,9 @@
 const getTasks = async () => {
-    const response = await fetch(URL);
+    const response = await fetch(`${URL}/all`, {
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        },
+    });
     if (!response.ok) {
         throw new Error("Something went wrong");
     }
@@ -8,10 +12,12 @@ const getTasks = async () => {
 };
 
 const addTask = async (task) => {
-    const response = await fetch(URL, {
+    const response = await fetch(`${URL}/create`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            "X-USER-ID": localStorage.getItem("user"),
         },
         body: JSON.stringify(task),
     });
@@ -23,9 +29,11 @@ const addTask = async (task) => {
     return response.data;
 };
 
-const deleteTask = async (id) => {
-    const response = await fetch(`${URL}/${id}`, {
+const deleteTask = async (taskId) => {
+    const response = await fetch(`${URL}/${taskId}`, {
         method: "DELETE",
+        "X-USER-ID": localStorage.getItem("user"),
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
     });
 
     if (!response.ok) {
@@ -36,10 +44,12 @@ const deleteTask = async (id) => {
 };
 
 const updateTask = async (id, task) => {
-    const response = await fetch(`${URL}/${id}`, {
+    const response = await fetch(`${URL}/update`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
+            "X-USER-ID": localStorage.getItem("user"),
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify(task),
     });

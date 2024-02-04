@@ -46,14 +46,14 @@ public class User {
 
   @OneToMany
   @JoinTable(
-      name = "user_tasks",
+      name = "tasks",
       joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id")
   )
   private Set<Task> tasks;
 
   @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(  name = "user_roles",
+  @JoinTable(  name = "roles",
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<UserRole> roles = new HashSet<>();
