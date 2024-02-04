@@ -5,7 +5,6 @@ export default function TaskCard(props) {
   const { id, title, description, status } = task;
 
   const cardStyles = {
-    // Existing styles remain unchanged
     card: {
       width: "300px",
       padding: "20px",
@@ -48,7 +47,7 @@ export default function TaskCard(props) {
       },
     },
     delete: {
-      backgroundColor: "#f44336", // Red
+      backgroundColor: "#f44336", 
       color: "white",
       ":hover": {
         backgroundColor: "#da190b",
@@ -58,7 +57,7 @@ export default function TaskCard(props) {
       marginTop: "20px",
     },
     dueDate: {
-      // New style for the due date
+
       fontSize: "14px",
       color: "#555",
       fontStyle: "italic",
@@ -112,13 +111,9 @@ export default function TaskCard(props) {
   const [isCompleted, setIsCompleted] = useState(false);
 
   const handleEdit = () => {
-    // Logic to handle the editing of the task
-    // For example, save the edited task to the backend
     setIsEditing(false);
-    // Update the task in the state of the parent component if needed
   };
 
-  // Inline toggle styles need to apply dynamic changes
   const toggleSliderStyle = {
     ...cardStyles.toggleSlider,
     background: isCompleted ? '#4CAF50' : '#ccc',
@@ -179,7 +174,6 @@ export default function TaskCard(props) {
         <p style={cardStyles.cardDescription}>{description}</p>
       )}
       <div style={cardStyles.dueDate}>Due Date: 2024-02-10</div>
-      {/* Toggle for mark as completed */}
        <label style={cardStyles.toggleLabel}>
          Mark as Completed
          <input
@@ -192,7 +186,6 @@ export default function TaskCard(props) {
           <span style={toggleBeforeStyle}></span>
         </span>
       </label>
-      {/* ... other parts of the card remain unchanged */}
     </div>
   );
 

@@ -1,4 +1,6 @@
+import { addTask } from '@/api/task';
 import Head from 'next/head';
+import { useEffect } from 'react';
 
 export default function CreateTask() {
   const styles = {
@@ -52,6 +54,26 @@ export default function CreateTask() {
     },
   };
 
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [dueDate, setDueDate] = useState('');
+
+
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const tasksData = await addTask();
+          setTasks(tasksData);
+        } catch (error) {
+          console.error("Error fetching tasks:", error);
+        }
+      };
+      fetchData();
+    }, []);
+  }
+
 return (
     <div style={styles.container}>
       <Head>
@@ -76,7 +98,7 @@ return (
           placeholder="Due Date"
           required
         />
-        <button type="submit" style={styles.button}>Create Task</button>
+        <button type="submit" style={styles.button} onClick={onSubmitHandler}>Create Task</button>
       </form>
     </div>
   );
