@@ -41,4 +41,13 @@ public class GlobalExceptionHandler {
       super(message);
     }
   }
+
+  public static class UserUnauthorizedException extends RuntimeException {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    public UserUnauthorizedException(String message) {
+      super(message);
+    }
+  }
 }

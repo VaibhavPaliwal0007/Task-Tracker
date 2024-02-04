@@ -31,10 +31,7 @@ public class AuthService {
   JwtUtils jwtUtils;
   AuthenticationManager authenticationManager;
   PasswordEncoder passwordEncoder;
-
-  public void saveUser(User user) {
-    this.userRepository.save(user);
-  }
+  UserService userService;
 
   public void registerUser(UserDto userDto) {
     if (userRepository.existsByUsername(userDto.getUsername())) {
@@ -52,7 +49,7 @@ public class AuthService {
     );
 
     user.setRoles(Set.of(new UserRole(RolesType.ROLE_USER)));
-    this.saveUser(user);
+    userService.saveUser(user);
   }
 
   public UserResponseDto validateTokenAndFindUser(UserDto user) {
@@ -60,6 +57,11 @@ public class AuthService {
           Authentication authentication = authenticationManager.authenticate(
               new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
           );
+
+          if (!authentication.isAuthenticated()) {
+              throw new GlobalExceptionHandler.UserUnauthorizedException("User not authorized");
+          }
+
           SecurityContextHolder.getContext().setAuthentication(authentication);
 
           String token = jwtUtils.generateJwtToken(authentication);

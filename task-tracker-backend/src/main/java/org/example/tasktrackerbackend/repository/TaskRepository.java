@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TaskRepository extends JpaRepository<Task, Long> {
     Optional<Task> findByTitle(String title);
     Set<Task> findByCompleted(boolean completed);
+    Set<Task> findByUserId(Long userId);
 }
