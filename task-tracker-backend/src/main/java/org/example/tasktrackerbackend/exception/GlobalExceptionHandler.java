@@ -1,6 +1,7 @@
 package org.example.tasktrackerbackend.exception;
 
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 @ControllerAdvice
 public class GlobalExceptionHandler {
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<ErrorLogs> handleTodoAPIException(Exception exception,
+  public ResponseEntity<ErrorLogs> handleAPIException(Exception exception,
       WebRequest webRequest){
 
     ErrorLogs errorDetails = new ErrorLogs(
@@ -24,13 +25,19 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
   }
 
-  public static void throwResourceNotFoundException(String message) {
-    throw new ResourceNotFoundException(message);
-  }
-
   @ResponseStatus(value = HttpStatus.NOT_FOUND)
   public static class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {
+      super(message);
+    }
+  }
+
+  @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+  public static class UserExistsException extends RuntimeException {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    public UserExistsException(String message) {
       super(message);
     }
   }

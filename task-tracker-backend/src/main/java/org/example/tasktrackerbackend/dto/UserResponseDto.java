@@ -1,7 +1,6 @@
 package org.example.tasktrackerbackend.dto;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,15 +10,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
-  @NotBlank
+public class UserResponseDto {
+  private String token;
+  private String type = "Bearer";
+  private Long id;
   private String username;
-
-  @NotBlank
-  @Email
   private String email;
-
-  @NotBlank
-  @Email
-  private String password;
+  private List<String> roles;
 }

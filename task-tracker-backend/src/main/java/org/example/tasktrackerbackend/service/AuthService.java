@@ -1,11 +1,12 @@
 package org.example.tasktrackerbackend.service;
 
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.tasktrackerbackend.dto.UserDto;
+import org.example.tasktrackerbackend.dto.UserResponseDto;
 import org.example.tasktrackerbackend.entity.RolesType;
 import org.example.tasktrackerbackend.entity.User;
 import org.example.tasktrackerbackend.entity.UserRole;
@@ -15,52 +16,69 @@ import org.example.tasktrackerbackend.security.jwt.JwtUtils;
 import org.example.tasktrackerbackend.security.services.UserDetailsImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 @AllArgsConstructor
 public class AuthService {
-    private static final String USER_NOT_FOUND_WITH_THE_GIVEN_CREDENTIALS = "User not found with the given credentials";
-    UserRepository userRepository;
-    JwtUtils jwtUtils;
-    AuthenticationManager authenticationManager;
 
-    public void saveUser(User user) {
-        this.userRepository.save(user);
-    }
-    public void register(String email, String password, String username) {
-        log.info("User with email {} registered", email);
-        User user = new User(username, email, password);
+  private static final String USER_NOT_FOUND_WITH_THE_GIVEN_CREDENTIALS = "User not found with the given credentials";
+  UserRepository userRepository;
+  JwtUtils jwtUtils;
+  AuthenticationManager authenticationManager;
+  PasswordEncoder passwordEncoder;
 
-        user.setRoles(
-            new HashSet<>(List.of(new UserRole(RolesType.ROLE_USER)))
-        );
+  public void saveUser(User user) {
+    this.userRepository.save(user);
+  }
 
-        this.saveUser(user);
+  public void registerUser(UserDto userDto) {
+    if (userRepository.existsByUsername(userDto.getUsername())) {
+      throw new GlobalExceptionHandler.UserExistsException("User with the given username already exists");
     }
 
-    public String login(UserDto user) {
-        log.info("User with email {} logged in", user.getEmail());
-
-        if (!this.userRepository.existsByEmail(user.getEmail())) {
-            throw new GlobalExceptionHandler.ResourceNotFoundException(USER_NOT_FOUND_WITH_THE_GIVEN_CREDENTIALS);
-        }
-
-       Authentication authentication = authenticationManager.authenticate(
-          new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-
-       SecurityContextHolder.getContext().setAuthentication(authentication);
-       String jwtToken = jwtUtils.generateJwtToken(authentication);
-
-//       UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-//       List<String> roles = userDetails.getAuthorities().stream()
-//          .map(item -> item.getAuthority())
-//          .collect(Collectors.toList());
-
-       return jwtToken;
+    if (userRepository.existsByEmail(userDto.getEmail())) {
+      throw new GlobalExceptionHandler.UserExistsException("User with the given email already exists");
     }
+
+    User user = new User(
+        userDto.getUsername(),
+        userDto.getEmail(),
+        passwordEncoder.encode(userDto.getPassword())
+    );
+
+    user.setRoles(Set.of(new UserRole(RolesType.ROLE_USER)));
+    this.saveUser(user);
+  }
+
+  public UserResponseDto validateTokenAndFindUser(UserDto user) {
+      try {
+          Authentication authentication = authenticationManager.authenticate(
+              new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+          );
+          SecurityContextHolder.getContext().setAuthentication(authentication);
+
+          String token = jwtUtils.generateJwtToken(authentication);
+          UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+          List<String> roles = userDetails.getAuthorities().stream()
+              .map(item -> item.getAuthority())
+              .collect(Collectors.toList());
+
+          return new UserResponseDto(
+              token,
+              "Bearer",
+              userDetails.getId(),
+              userDetails.getUsername(),
+              userDetails.getEmail(),
+              roles
+          );
+      } catch (Exception e) {
+          log.error(USER_NOT_FOUND_WITH_THE_GIVEN_CREDENTIALS);
+          throw new GlobalExceptionHandler.ResourceNotFoundException(USER_NOT_FOUND_WITH_THE_GIVEN_CREDENTIALS);
+      }
+  }
 }
