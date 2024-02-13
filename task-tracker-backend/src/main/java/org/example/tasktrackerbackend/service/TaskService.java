@@ -4,11 +4,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.tasktrackerbackend.dto.TaskDto;
 import org.example.tasktrackerbackend.entity.Task;
 import org.example.tasktrackerbackend.entity.User;
-import org.example.tasktrackerbackend.exception.GlobalExceptionHandler;
 import org.example.tasktrackerbackend.exception.GlobalExceptionHandler.ResourceNotFoundException;
 import org.example.tasktrackerbackend.exception.GlobalExceptionHandler.UserUnauthorizedException;
 import org.example.tasktrackerbackend.repository.TaskRepository;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class TaskService {
     private TaskRepository taskRepository;
     private UserService userService;

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.tasktrackerbackend.dto.UserDto;
 import org.example.tasktrackerbackend.dto.UserResponseDto;
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @AllArgsConstructor
-@NoArgsConstructor
 public class AuthService {
 
   private static final String USER_NOT_FOUND_WITH_THE_GIVEN_CREDENTIALS = "User not found with the given credentials";

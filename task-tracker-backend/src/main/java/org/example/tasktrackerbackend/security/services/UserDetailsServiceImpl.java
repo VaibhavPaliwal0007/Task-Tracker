@@ -1,5 +1,6 @@
 package org.example.tasktrackerbackend.security.services;
 
+import lombok.AllArgsConstructor;
 import org.example.tasktrackerbackend.entity.User;
 import org.example.tasktrackerbackend.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
   UserRepository userRepository;
 

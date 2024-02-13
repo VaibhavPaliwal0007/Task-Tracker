@@ -2,27 +2,26 @@ package org.example.tasktrackerbackend.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import org.example.tasktrackerbackend.dto.TaskDto;
 import org.example.tasktrackerbackend.service.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
+@CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping("/api/task")
+@AllArgsConstructor
 public class TaskController {
     private final TaskService taskService;
-
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
-    }
 
     @PostMapping("/create")
     ResponseEntity<String> createTask(@RequestBody TaskDto taskDTO, HttpServletRequest request) {
@@ -31,7 +30,7 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<TaskDto> getTaskById(Long id) {
+    ResponseEntity<TaskDto> getTaskById(@PathVariable Long id) {
         TaskDto taskDto = taskService.getTaskById(id);
         return ResponseEntity.status(200).body(taskDto);
     }
@@ -48,9 +47,9 @@ public class TaskController {
         return ResponseEntity.ok("Task updated successfully!");
     }
 
-    @DeleteMapping("/delete/{taskId}")
-    ResponseEntity<String> deleteTask(Long taskId, HttpServletRequest request) {
-        taskService.deleteTask(taskId, request);
+    @DeleteMapping("/delete/{id}")
+    ResponseEntity<String> deleteTask(@PathVariable Long id, HttpServletRequest request) {
+        taskService.deleteTask(id, request);
         return ResponseEntity.ok("Task deleted successfully!");
     }
 }
